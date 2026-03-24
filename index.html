@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing_V2</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #fff5f7;
+            overflow: hidden; /* กัน Scroll bar โผล่ตอนปุ่มวิ่งหนี */
+            transition: background 0.5s;
+        }
+        .card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(255, 77, 109, 0.1);
+            text-align: center;
+            max-width: 450px;
+            width: 85%;
+            z-index: 5;
+            position: relative;
+        }
+        h1 { color: #ff4d6d; margin-bottom: 10px; transition: 0.3s; font-size: 1.8rem; }
+        p { color: #555; margin-bottom: 30px; font-size: 1.1rem; }
+        
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            min-height: 100px;
+        }
+        
+        button {
+            padding: 12px 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        #yesBtn {
+            background-color: #ff4d6d;
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.3);
+            z-index: 10; 
+        }
+
+        #noBtn {
+            background-color: #e9ecef;
+            color: #6c757d;
+            z-index: 100; 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card" id="mainCard">
+        <h1 id="question">Will you be my partner? ❤️</h1>
+        <p id="subtext">04551</p>
+
+        <div class="btn-group">
+            <button id="yesBtn" onclick="congrats()">YES!</button>
+            <button id="noBtn" onmouseover="moveButton()" onclick="moveButton()">NO</button>
+        </div>
+    </div>
+
+    <script>
+        let scale = 1;
+        let noCount = 0;
+        const phrases = [
+            "Will you be my partner? ❤️",
+            "Are you sure? 🥺",
+            "Think again... 🌹",
+            "Don't be like that! 😭",
+            "You can't escape my love! 😈",
+            "Just say YES already! ✨"
+        ];
+
+        function moveButton() {
+            const noBtn = document.getElementById('noBtn');
+            const yesBtn = document.getElementById('yesBtn');
+            const question = document.getElementById('question');
+            
+            // ทำให้ปุ่ม NO เป็น Fixed ทันทีที่ขยับ เพื่อให้วิ่งหนีได้ทั่วหน้าจอ
+            noBtn.style.position = 'fixed';
+
+            // คำนวณตำแหน่งสุ่มที่ปลอดภัย (ไม่หลุดขอบจอ)
+            const padding = 20;
+            const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+            const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+
+            const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
+            const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
+
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+
+            // 2. ขยายปุ่ม YES (จำกัดขนาดที่ 5 เท่า ไม่ให้ล้นจอเกินไป)
+            if (scale < 5) {
+                scale += 0.8;
+                yesBtn.style.transform = `scale(${scale})`;
+                yesBtn.style.zIndex = Math.floor(scale * 10);
+            }
+            
+            // 3. เปลี่ยนข้อความอ้อนๆ
+            noCount++;
+            if (noCount < phrases.length) {
+                question.innerText = phrases[noCount];
+            } else {
+                question.innerText = "There is only one choice! 😘";
+            }
+
+            // 4. เปลี่ยนสีพื้นหลังให้ดูโรแมนติกขึ้น (ชมพูเข้มขึ้น)
+            const colorVal = Math.max(180, 245 - (noCount * 10));
+            document.body.style.backgroundColor = `rgb(255, ${colorVal}, ${colorVal + 2})`;
+        }
+
+        function congrats() {
+            // เมื่อกด YES จะแสดงหน้าจอฉลอง
+            document.body.innerHTML = `
+                <div style="text-align:center; animation: pop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+                    <h1 style="font-size: 70px; color: #ff4d6d; margin: 0;">🎉 YES! 🎉</h1>
+                    <p style="font-size: 24px; color: #555;">
+                        04551 - You're mine now! ❤️<br>
+                        "I'm so happy ✨"
+                    </p>
+                </div>
+            `;
+        }
+    </script>
+
+    <style>
+        /* Animation ตอนจบ */
+        @keyframes pop {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</body>
+</html>
