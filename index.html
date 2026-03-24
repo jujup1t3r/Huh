@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,9 +15,11 @@
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #fff5f7;
-            overflow: hidden; /* กัน Scroll bar โผล่ตอนปุ่มวิ่งหนี */
+            overflow: hidden;
+            /* กัน Scroll bar โผล่ตอนปุ่มวิ่งหนี */
             transition: background 0.5s;
         }
+
         .card {
             background: white;
             padding: 40px;
@@ -28,9 +31,20 @@
             z-index: 5;
             position: relative;
         }
-        h1 { color: #ff4d6d; margin-bottom: 10px; transition: 0.3s; font-size: 1.8rem; }
-        p { color: #555; margin-bottom: 30px; font-size: 1.1rem; }
-        
+
+        h1 {
+            color: #ff4d6d;
+            margin-bottom: 10px;
+            transition: 0.3s;
+            font-size: 1.8rem;
+        }
+
+        p {
+            color: #555;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
         .btn-group {
             display: flex;
             justify-content: center;
@@ -38,7 +52,7 @@
             gap: 30px;
             min-height: 100px;
         }
-        
+
         button {
             padding: 12px 25px;
             font-size: 1rem;
@@ -53,16 +67,17 @@
             background-color: #ff4d6d;
             color: white;
             box-shadow: 0 4px 15px rgba(255, 77, 109, 0.3);
-            z-index: 10; 
+            z-index: 10;
         }
 
         #noBtn {
             background-color: #e9ecef;
             color: #6c757d;
-            z-index: 100; 
+            z-index: 100;
         }
     </style>
 </head>
+
 <body>
 
     <div class="card" id="mainCard">
@@ -91,11 +106,9 @@
             const noBtn = document.getElementById('noBtn');
             const yesBtn = document.getElementById('yesBtn');
             const question = document.getElementById('question');
-            
-            // ทำให้ปุ่ม NO เป็น Fixed ทันทีที่ขยับ เพื่อให้วิ่งหนีได้ทั่วหน้าจอ
+
             noBtn.style.position = 'fixed';
 
-            // คำนวณตำแหน่งสุ่มที่ปลอดภัย (ไม่หลุดขอบจอ)
             const padding = 20;
             const maxX = window.innerWidth - noBtn.offsetWidth - padding;
             const maxY = window.innerHeight - noBtn.offsetHeight - padding;
@@ -106,24 +119,21 @@
             noBtn.style.left = randomX + 'px';
             noBtn.style.top = randomY + 'px';
 
-            // 2. ขยายปุ่ม YES (จำกัดขนาดที่ 5 เท่า ไม่ให้ล้นจอเกินไป)
-            if (scale < 5) {
-                scale += 0.8;
-                yesBtn.style.transform = `scale(${scale})`;
-                yesBtn.style.zIndex = Math.floor(scale * 10);
-            }
-            
-            // 3. เปลี่ยนข้อความอ้อนๆ
+            // --- จุดที่ทำให้ YES ครองโลก ---
+            scale += 1.5; // กด NO พลาดทีเดียว YES จะโตขึ้นมหาศาล!
+            yesBtn.style.transform = `scale(${scale})`;
+            yesBtn.style.zIndex = "999"; // ให้มาอยู่ข้างหน้าสุด ทับทุกอย่าง
+            // ----------------------------
+
             noCount++;
             if (noCount < phrases.length) {
                 question.innerText = phrases[noCount];
             } else {
-                question.innerText = "There is only one choice! 😘";
+                question.innerText = "There is ONLY YES! 😘";
             }
 
-            // 4. เปลี่ยนสีพื้นหลังให้ดูโรแมนติกขึ้น (ชมพูเข้มขึ้น)
-            const colorVal = Math.max(180, 245 - (noCount * 10));
-            document.body.style.backgroundColor = `rgb(255, ${colorVal}, ${colorVal + 2})`;
+            const colorVal = Math.max(150, 245 - (noCount * 15));
+            document.body.style.backgroundColor = `rgb(255, ${colorVal}, ${colorVal + 5})`;
         }
 
         function congrats() {
@@ -143,9 +153,17 @@
     <style>
         /* Animation ตอนจบ */
         @keyframes pop {
-            0% { transform: scale(0.5); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
     </style>
 </body>
+
 </html>
